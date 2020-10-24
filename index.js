@@ -61,15 +61,19 @@ class Hangman
 class Word
 {
    constructor(word,description){
-     this.word = word;
+     this.word = word.toUpperCase();
      this.description = description;
      this.letters=[];
      this._wrong = 0;
 
+     this.text_size = 40;
      this.offset_x = 20;
      this.offset_y = 500;
      this.width = 500;
      this.word_width  = this.width/this.word.length;
+
+     textSize(this.text_size);
+     textAlign(CENTER, CENTER);
    }
 
    get wrong(){return this._wrong;}
@@ -79,19 +83,18 @@ class Word
     //Lisandro TODO:
     //agregar un rectangulo que contenga el texto de la descripcion. 
 
-
+    fill(255); 
     for(let i=0;i<this.word.length;i++){  
-
+        let x =this.offset_x+ (i*this.word_width); 
         let letter = this.word.charAt(i);   
-        if(this.letters.indexOf(letter) >-1){
-          fill('#888888');
-          text(letter,this.offset_x+ (i*this.word_width) , this.offset_y, 100, 350);
+        if(this.letters.indexOf(letter) >-1){          
+          text(letter,x+(this.word_width/2), this.offset_y);
         }
-        fill('#2364AA');
-        rect(this.offset_x+ (i*this.word_width) ,this.offset_y, this.word_width, 50);
+        line(x , this.offset_y+(this.text_size/2), x+this.word_width, this.offset_y+(this.text_size/2));
     }      
    }
    ingress(letter){
+      letter = letter.toUpperCase();
       if(this.word.includes(letter)){
           if(this.letters.indexOf(letter) ==-1){
             this.letters.push(letter);
