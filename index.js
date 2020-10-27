@@ -3,7 +3,12 @@ const WIDTH = 800
 const HIGH = 650
 let hangman;
 let word;
-let word2;
+let desc;
+
+
+let words  = [ ["Mesopotamia","‘la tierra entre ríos’, o del siríaco ܒܝܬ ܢܗܪܝܢ beth nahrin ‘entre dos ríos’) es el nombre por el cual se conoce a la zona del Oriente Próximo ubicada entre los ríos Tigris y Éufrates, si bien se extiende a las zonas fértiles contiguas a la franja entre ambos ríos, y que coincide aproximadamente con las áreas no desérticas del actual Irak y la zona limítrofe del norte-este de Siria." ]
+             , ["Perro","carnívoro domesticado de la familia Canidae" ]
+             ];
 
 function setup() {
   
@@ -11,15 +16,25 @@ function setup() {
   canvas.parent('#canvasHolder');
 
   hangman = new Hangman();
-  word = new Word("Mesopotamia","‘la tierra entre ríos’, o del siríaco ܒܝܬ ܢܗܪܝܢ beth nahrin ‘entre dos ríos’) es el nombre por el cual se conoce a la zona del Oriente Próximo ubicada entre los ríos Tigris y Éufrates, si bien se extiende a las zonas fértiles contiguas a la franja entre ambos ríos, y que coincide aproximadamente con las áreas no desérticas del actual Irak y la zona limítrofe del norte-este de Siria.");
-  word2 = new desc('zona del Oriente Próximo');
+  let r = Math.floor((Math.random() * words.length) );
+  word = new Word(words[r][0]);
+  desc = new Desc(words[r][1]);
 }
 function draw() {
     background(0); 
 
     hangman.draw(word.wrong);
     word.draw();
-    word2.draw();
+    desc.draw();
+
+    if(word.wrong>=6){
+      alert('Game over');
+      noLoop();
+    }
+    if(word.pending == 0){
+      alert('winer');
+      noLoop();
+    }
    
 }
 
@@ -71,9 +86,8 @@ class Hangman
 
 class Word
 {
-   constructor(word,description){
+   constructor(word){
      this.word = word.toUpperCase();
-     this.description = description;
      this.letters=[];
      this._wrong = 0;
 
@@ -88,22 +102,21 @@ class Word
    }
 
    get wrong(){return this._wrong;}
+   get pending(){ 
+      let pending = 0; 
+      for(let i=0;i<this.word.length;i++){  
+        let letter = this.word.charAt(i); 
+        if(this.letters.indexOf(letter) <=-1)
+          pending++
+      }
+      return pending;
 
-
-
-   
-
+   }
 
    draw(){
-    stroke(400)
-    line(80 , 400, 500, 400); //linea superior
-    line(80 , 330, 500, 330); //linea inferior
-    line(80 , 330, 80, 400); //linea izquierda
-    line(500, 400, 500, 330); //linea derecha
-
-   
 
     fill(255); 
+    this._pending=0;
     for(let i=0;i<this.word.length;i++){  
         let x =this.offset_x+ (i*this.word_width); 
         let letter = this.word.charAt(i);   
@@ -125,34 +138,25 @@ class Word
     }
   }
 
-class desc
+class Desc
 {
-   constructor(word2,description2){
-     this.word2 = word2;
-     this.description2 = description2;
-     this.letters1=[];
-
+   constructor(description){
+     this.description = description;
      this.offset_x = 20;
-     this.offset_y = 300;
-     this.width = 300;
-     this.word2_width  = this.width/this.word2.length;
+     this.offset_y = 100;
+     this.width = 500;
+     this.higth  = 230;
    }
 
    draw(){
 
-    stroke(400)
-    line(10 , 280, 500, 280); //linea superior
-    line(10 , 330, 500, 330); //linea inferior
-    line(10 , 280, 10, 330); //linea izquierda
-    line(500, 280, 500, 330);
+    fill('#999999'); 
+    strokeWeight(4);
+    stroke(51);
+    rect(this.offset_x ,this.offset_y, this.offset_x+this.width, this.offset_y+this.higth);
 
-  for(let i=0;i<this.word2.length;i++){  
-
-    let letter2 = this.word2.charAt(i);   
-    if(this.letters1.indexOf(letter2) >-1);
-    fill('#8a2be2');
-          text(letter2,this.offset_x+ (i*this.word2_width) , this.offset_y, 100, 350);
-  }
+    textSize(20);
+    text(this.description,this.offset_x, this.offset_y,this.width,this.higth);
   }
 }
 
