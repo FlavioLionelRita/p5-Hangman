@@ -3,7 +3,7 @@ const WIDTH = 800
 const HIGH = 650
 let hangman;
 let word;
-
+let word2;
 
 function setup() {
   
@@ -12,12 +12,14 @@ function setup() {
 
   hangman = new Hangman();
   word = new Word("Mesopotamia","‘la tierra entre ríos’, o del siríaco ܒܝܬ ܢܗܪܝܢ beth nahrin ‘entre dos ríos’) es el nombre por el cual se conoce a la zona del Oriente Próximo ubicada entre los ríos Tigris y Éufrates, si bien se extiende a las zonas fértiles contiguas a la franja entre ambos ríos, y que coincide aproximadamente con las áreas no desérticas del actual Irak y la zona limítrofe del norte-este de Siria.");
+  word2 = new desc('zona del Oriente Próximo');
 }
 function draw() {
     background(0); 
 
     hangman.draw(word.wrong);
     word.draw();
+    word2.draw();
    
 }
 
@@ -99,6 +101,37 @@ class Word
       }else{
         this._wrong++;
       }
-   
+    }
+  }
+
+class desc
+{
+   constructor(word2,description2){
+     this.word2 = word2;
+     this.description2 = description2;
+     this.letters1=[];
+
+     this.offset_x = 20;
+     this.offset_y = 300;
+     this.width = 300;
+     this.word2_width  = this.width/this.word2.length;
    }
+
+   draw(){
+
+    stroke(400)
+    line(10 , 280, 500, 280); //linea superior
+    line(10 , 330, 500, 330); //linea inferior
+    line(10 , 280, 10, 330); //linea izquierda
+    line(500, 280, 500, 330);
+
+  for(let i=0;i<this.word2.length;i++){  
+
+    let letter2 = this.word2.charAt(i);   
+    if(this.letters1.indexOf(letter2) >-1);
+    fill('#8a2be2');
+          text(letter2,this.offset_x+ (i*this.word2_width) , this.offset_y, 100, 350);
+  }
+  }
 }
+
