@@ -36,6 +36,9 @@ class Hangman
     this.higth = 500;
   }
 
+
+
+
   draw(wrong){
 
     stroke(153);
@@ -53,8 +56,14 @@ class Hangman
       line(this.offset_x+50 , this.offset_y+100, this.offset_x+50, this.offset_y+300);//torso
     if(wrong>=3)    
       line(this.offset_x+50 , this.offset_y+120, this.offset_x+90, this.offset_y+175); //brazo derecho 
+    if (wrong>=4)
+      line(this.offset_x+50 , this.offset_y+120, this.offset_x+8, this.offset_y+175); //brazo izquierdo
+    if (wrong>=5)
+      line(this.offset_x+50 , this.offset_y+300, this.offset_x+80, this.offset_y+400); //pienra derecha
+      if (wrong>=6)
+      line(this.offset_x+50 , this.offset_y+300, this.offset_x+20, this.offset_y+400); //pierna izquierdo
+    
 
-    //IAN TODO: hacer brazo izquierdo, pierna izquierda y pierna derecha    
   }
 }
 
@@ -74,10 +83,19 @@ class Word
 
    get wrong(){return this._wrong;}
 
-   draw(){
 
-    //Lisandro TODO:
-    //agregar un rectangulo que contenga el texto de la descripcion. 
+
+   
+
+
+   draw(){
+    stroke(400)
+    line(80 , 400, 500, 400); //linea superior
+    line(80 , 330, 500, 330); //linea inferior
+    line(80 , 330, 80, 400); //linea izquierda
+    line(500, 400, 500, 330); //linea derecha
+
+   
 
 
     for(let i=0;i<this.word.length;i++){  
