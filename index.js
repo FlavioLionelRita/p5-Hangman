@@ -1,162 +1,22 @@
+const express = require("express");
+const bodyParser = require("body-parser");
+const router = express.Router();
+const app = express();
+const Service = require("./lib/service");
+let service = new Service();
 
-const WIDTH = 800
-const HIGH = 650
-let hangman;
-let word;
-let desc;
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use("/", router); 
+app.use(express.static('public'));
 
+app.listen(8080);
 
-let words  = [ ["Mesopotamia","‘la tierra entre ríos’, o del siríaco ܒܝܬ ܢܗܪܝܢ beth nahrin ‘entre dos ríos’) es el nombre por el cual se conoce a la zona del Oriente Próximo ubicada entre los ríos Tigris y Éufrates, si bien se extiende a las zonas fértiles contiguas a la franja entre ambos ríos, y que coincide aproximadamente con las áreas no desérticas del actual Irak y la zona limítrofe del norte-este de Siria." ]
-             , ["Perro","carnívoro domesticado de la familia Canidae" ]
-             ];
+app.get('/word/random', function (req, res) {
+    let data = service.randomWord();  
+    res.send(data);
+});
 
-function setup() {
-  
-  const canvas = createCanvas(WIDTH, HIGH);
-  canvas.parent('#canvasHolder');
+console.log('Server running at: http://localhost:8080'); 
 
-  hangman = new Hangman();
-  let r = Math.floor((Math.random() * words.length) );
-  word = new Word(words[r][0]);
-  desc = new Desc(words[r][1]);
-}
-function draw() {
-    background(0); 
-
-    hangman.draw(word.wrong);
-    word.draw();
-    desc.draw();
-
-    if(word.wrong>=6){
-      alert('Game over');
-      noLoop();
-    }
-    if(word.pending == 0){
-      alert('winer');
-      noLoop();
-    }
-   
-}
-
-function keyPressed() {  
-  word.ingress(key);
-}
-
-
-
-class Hangman
-{
-  constructor(){
-
-    this.offset_x = 550;
-    this.offset_y = 100;
-    this.higth = 500;
-  }
-
-
-
-
-  draw(wrong){
-
-    stroke(153);
-    //estructura
-    line(this.offset_x+50 , this.offset_y, this.offset_x+50, this.offset_y+50);
-    line(this.offset_x+50 , this.offset_y, this.offset_x+150, this.offset_y);
-    line(this.offset_x+150 , this.offset_y, this.offset_x+150, this.offset_y+this.higth);
-    line(this.offset_x+100 , this.offset_y+this.higth, this.offset_x+200, this.offset_y+this.higth);
-
-    //cuerpo
-    fill(255);
-    if(wrong>=1)
-      ellipse(this.offset_x+50,this.offset_y+75, 50, 50);//cabeza
-    if(wrong>=2)    
-      line(this.offset_x+50 , this.offset_y+100, this.offset_x+50, this.offset_y+300);//torso
-    if(wrong>=3)    
-      line(this.offset_x+50 , this.offset_y+120, this.offset_x+90, this.offset_y+175); //brazo derecho 
-    if (wrong>=4)
-      line(this.offset_x+50 , this.offset_y+120, this.offset_x+8, this.offset_y+175); //brazo izquierdo
-    if (wrong>=5)
-      line(this.offset_x+50 , this.offset_y+300, this.offset_x+80, this.offset_y+400); //pienra derecha
-      if (wrong>=6)
-      line(this.offset_x+50 , this.offset_y+300, this.offset_x+20, this.offset_y+400); //pierna izquierdo
-    
-
-  }
-}
-
-class Word
-{
-   constructor(word){
-     this.word = word.toUpperCase();
-     this.letters=[];
-     this._wrong = 0;
-
-     this.text_size = 40;
-     this.offset_x = 20;
-     this.offset_y = 500;
-     this.width = 500;
-     this.word_width  = this.width/this.word.length;
-
-     textSize(this.text_size);
-     textAlign(CENTER, CENTER);
-   }
-
-   get wrong(){return this._wrong;}
-   get pending(){ 
-      let pending = 0; 
-      for(let i=0;i<this.word.length;i++){  
-        let letter = this.word.charAt(i); 
-        if(this.letters.indexOf(letter) <=-1)
-          pending++
-      }
-      return pending;
-
-   }
-
-   draw(){
-
-    fill(255); 
-    this._pending=0;
-    for(let i=0;i<this.word.length;i++){  
-        let x =this.offset_x+ (i*this.word_width); 
-        let letter = this.word.charAt(i);   
-        if(this.letters.indexOf(letter) >-1){          
-          text(letter,x+(this.word_width/2), this.offset_y);
-        }
-        line(x , this.offset_y+(this.text_size/2), x+this.word_width, this.offset_y+(this.text_size/2));
-    }      
-   }
-   ingress(letter){
-      letter = letter.toUpperCase();
-      if(this.word.includes(letter)){
-          if(this.letters.indexOf(letter) ==-1){
-            this.letters.push(letter);
-          }
-      }else{
-        this._wrong++;
-      }
-    }
-  }
-
-class Desc
-{
-   constructor(description){
-     this.description = description;
-     this.offset_x = 20;
-     this.offset_y = 100;
-     this.width = 500;
-     this.higth  = 230;
-   }
-
-   draw(){
-
-    fill('#999999'); 
-    strokeWeight(4);
-    stroke(51);
-    rect(this.offset_x ,this.offset_y, this.offset_x+this.width, this.offset_y+this.higth);
-
-    textSize(20);
-    text(this.description,this.offset_x, this.offset_y,this.width,this.higth);
-  }
-}
-
+//http://localhost:8080/word/random
