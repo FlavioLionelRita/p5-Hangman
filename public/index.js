@@ -10,9 +10,9 @@ async function setup() {
   const canvas = createCanvas(WIDTH, HIGH);
   canvas.parent('#canvasHolder');
   hangman = new Hangman();
-  let _word = await $.ajax({url: '/word/random',type: 'GET'});
-  word = new Word(_word[0]);
-  desc = new Desc(_word[1]);
+  let _word = await $.ajax({url: '/category/english/age/15/level/1/word/random',type: 'GET'});
+  word = new Word(_word.name);
+  desc = new Desc(_word.meaning);
 }
 
 async function draw() {

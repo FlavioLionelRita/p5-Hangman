@@ -1,0 +1,8 @@
+@host=localhost:8000
+
+
+
+GET http://{{host}}/category/english/age/15/level/1/word/random 
+
+###
+GET http://{{host}}/health
